@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Angel ❤️ Daksh</title>
+
+<style>
+body{
+margin:0;
+font-family:Segoe UI;
+overflow:hidden;
+color:white;
+transition:1.5s;
+}
+
+/* BACKGROUND THEMES */
+.bg1{background:linear-gradient(#020024,#090979,#000);}
+.bg2{background:linear-gradient(#ff758c,#ff7eb3);}
+.bg3{background:linear-gradient(#1e3c72,#2a5298);}
+.bg4{background:linear-gradient(#141E30,#243B55);}
+.bg5{background:linear-gradient(#000428,#004e92);}
+.bg6{background:linear-gradient(#ff9966,#ff5e62);}
+
+/* SCENES */
+.scene{
+position:absolute;
+width:100%;
+height:100%;
+display:none;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+text-align:center;
+padding:20px;
+}
+
+.scene.active{
+display:flex;
+}
+
+/* BUTTON */
+button{
+padding:12px 22px;
+border:none;
+border-radius:12px;
+background:#ff4d6d;
+color:white;
+font-size:18px;
+cursor:pointer;
+margin:10px;
+}
+
+#noBtn{position:absolute;background:#aaa;}
+
+/* MEMORY GAME */
+.card{
+width:80px;
+height:80px;
+background:white;
+color:black;
+display:inline-flex;
+justify-content:center;
+align-items:center;
+margin:8px;
+font-size:30px;
+border-radius:12px;
+cursor:pointer;
+}
+</style>
+</head>
+
+<body class="bg1">
+
+<!-- MUSIC -->
+<iframe style="position:fixed;bottom:10px;left:10px;border-radius:12px"
+src="https://open.spotify.com/embed/track/5XeFesFbtLpXzIVDNQP22n"
+width="260" height="80"></iframe>
+
+<!-- PASSWORD -->
+<div class="scene active" id="scene0">
+<h2>Enter Secret Code 🔒</h2>
+<input type="password" id="pass">
+<button onclick="start()">Start</button>
+</div>
+
+<!-- VALENTINE -->
+<div class="scene" id="scene1">
+<h1>Angel Singh 💖</h1>
+<h2>Will you be my Valentine?</h2>
+<button onclick="next()">Yes ❤️</button>
+<button id="noBtn">No 😝</button>
+</div>
+
+<!-- MEMORY -->
+<div class="scene" id="scene2">
+<h1>9th Class Picnic Memory 🚌</h1>
+<p>That unforgettable bus ride...</p>
+<button onclick="next()">Continue</button>
+</div>
+
+<!-- MESSAGE -->
+<div class="scene" id="scene3">
+<h2 id="typing"></h2>
+</div>
+
+<!-- GAME -->
+<div class="scene" id="scene4">
+<h2>Love Memory Match 💘</h2>
+<div id="cards"></div>
+</div>
+
+<!-- PROPOSAL -->
+<div class="scene" id="scene5">
+<h1>Angel ❤️</h1>
+<h2>
+I really love you ma señorita~  
+will you make my heart go baila-baila boom boom?
+</h2>
+</div>
+
+<script>
+
+let current = 0;
+
+/* CHANGE SCENE */
+function showScene(n){
+
+document.querySelectorAll(".scene").forEach(s=>s.classList.remove("active"));
+document.getElementById("scene"+n).classList.add("active");
+
+/* Background change */
+document.body.className = "bg"+(n+1);
+}
+
+/* START */
+function start(){
+if(document.getElementById("pass").value === "16august2023"){
+current = 1;
+showScene(current);
+}else alert("Wrong password");
+}
+
+/* NEXT */
+function next(){
+current++;
+showScene(current);
+
+if(current === 3) typeMessage();
+if(current === 4) startGame();
+}
+
+/* RUNNING NO BUTTON */
+const noBtn = document.getElementById("noBtn");
+noBtn.addEventListener("mouseover",()=>{
+noBtn.style.left=Math.random()*300+"px";
+noBtn.style.top=Math.random()*200+"px";
+});
+
+/* TYPING MESSAGE */
+let text = `Hello my heart burrito 🌯❤️
+You are the cheese to my nachos
+and the WiFi to my happiness.
+
+Señorita mi amorito 🌹`;
+
+let i=0;
+
+function typeMessage(){
+let el = document.getElementById("typing");
+el.innerHTML="";
+
+function typing(){
+if(i < text.length){
+el.innerHTML += text[i];
+i++;
+setTimeout(typing,40);
+}else{
+setTimeout(next,3000);
+}
+}
+
+typing();
+}
+
+/* MEMORY MATCH GAME */
+let emojis = ["❤️","🌹","💖","😍","❤️","🌹","💖","😍"];
+let flipped=[];
+let matched=0;
+
+function startGame(){
+
+let container = document.getElementById("cards");
+container.innerHTML="";
+
+emojis.sort(()=>Math.random()-0.5);
+
+emojis.forEach(e=>{
+let card=document.createElement("div");
+card.className="card";
+card.innerText="?";
+card.dataset.val=e;
+
+card.onclick=()=>{
+
+if(card.innerText!=="?") return;
+
+card.innerText=e;
+flipped.push(card);
+
+if(flipped.length===2){
+
+if(flipped[0].dataset.val===flipped[1].dataset.val){
+matched+=2;
+flipped=[];
+
+if(matched===emojis.length){
+setTimeout(next,1500);
+}
+
+}else{
+setTimeout(()=>{
+flipped.forEach(c=>c.innerText="?");
+flipped=[];
+},800);
+}
+}
+};
+
+container.appendChild(card);
+});
+}
+
+</script>
+</body>
+</html>
